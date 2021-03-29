@@ -1,0 +1,8 @@
+C:\Users\admin\source\repos\Bank_Management_System\_Core\bin\Debug\netcoreapp3.1\_Core.deps.json
+C:\Users\admin\source\repos\Bank_Management_System\_Core\bin\Debug\netcoreapp3.1\_Core.dll
+C:\Users\admin\source\repos\Bank_Management_System\_Core\bin\Debug\netcoreapp3.1\_Core.pdb
+C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.csprojAssemblyReference.cache
+C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.AssemblyInfoInputs.cache
+C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.AssemblyInfo.cs
+C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.dll
+C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.pdb
