@@ -16,6 +16,8 @@ namespace _Data
             public DbSet<Loan> Loans { get; set; }
             public DbSet<Bank> Banks { get; set; }
             public DbSet<Transactions> Transactions { get; set; }
+            public DbSet<Cheque> Cheques { get; set; }
+            public DbSet<ImageStore> ImageStores { get; set; }
 
 
         // public DbSet<Role> Roles { get; set; }
