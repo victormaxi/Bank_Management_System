@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank_Management_System", "Bank_Management_System\Bank_Management_System.csproj", "{FF1FDDB8-0B70-47D5-9100-444AAD49B5AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank_Management_System", "Bank_Management_System\Bank_Management_System.csproj", "{FF1FDDB8-0B70-47D5-9100-444AAD49B5AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Data", "_Data\_Data.csproj", "{3C9789F7-E716-4881-949D-6D2BBBBEC1E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Data", "_Data\_Data.csproj", "{3C9789F7-E716-4881-949D-6D2BBBBEC1E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Core", "_Core\_Core.csproj", "{C586CEC6-1533-4225-B975-D8106D1BB410}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Core", "_Core\_Core.csproj", "{C586CEC6-1533-4225-B975-D8106D1BB410}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Domain", "_Domain\_Domain.csproj", "{F1B8E5C1-B631-4ABC-B9BD-822F79DA5543}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Domain", "_Domain\_Domain.csproj", "{F1B8E5C1-B631-4ABC-B9BD-822F79DA5543}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank_Management_System_Web", "Bank_Management_System_Web\Bank_Management_System_Web.csproj", "{A39ADABF-869F-4CB9-BC55-31DBE759823B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{F1B8E5C1-B631-4ABC-B9BD-822F79DA5543}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1B8E5C1-B631-4ABC-B9BD-822F79DA5543}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1B8E5C1-B631-4ABC-B9BD-822F79DA5543}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A39ADABF-869F-4CB9-BC55-31DBE759823B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A39ADABF-869F-4CB9-BC55-31DBE759823B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A39ADABF-869F-4CB9-BC55-31DBE759823B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A39ADABF-869F-4CB9-BC55-31DBE759823B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

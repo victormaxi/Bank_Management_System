@@ -1,12 +1,18 @@
 ﻿using _Core.Interfaces;
 using _Core.Utility;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Util.Store;
+using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _Domain.EmailManager
@@ -14,10 +20,12 @@ namespace _Domain.EmailManager
     public class EmailSender : IEmailSender
     {
         private readonly EmailConfiguration _emailConfig;
+        private readonly GmailKey _gmailKey;
 
-        public EmailSender(EmailConfiguration emailConfig)
+        public EmailSender(EmailConfiguration emailConfig, GmailKey gmailKey)
         {
             _emailConfig = emailConfig;
+            _gmailKey = gmailKey;
         }
         public async void SendConfirmEmailAsync(Message message)
         {
@@ -25,6 +33,7 @@ namespace _Domain.EmailManager
             {
                 var emailMessage =  ConfirmEmailMessage(message);
                 await SendAsync(emailMessage);
+                
             }
             catch (Exception ex)
             {
@@ -51,7 +60,7 @@ namespace _Domain.EmailManager
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
-            { Text = string.Format("<h2> style = 'color:red;'> {0} </h2>", message.Content) };
+            { Text = string.Format(@"<h2> style = 'color:red;'> {0} </h2>", message.Content) };
 
             return emailMessage; 
         }
@@ -88,8 +97,9 @@ namespace _Domain.EmailManager
             {
                 try
                 {
-                    await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, true);
+                    await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port_SSL, true);
                      client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    
                     await client.AuthenticateAsync(_emailConfig.Username, _emailConfig.Password);
                     
 
@@ -105,6 +115,44 @@ namespace _Domain.EmailManager
                     client.Dispose();
                 }
             }
+        }
+
+        private async Task Oauth (MimeMessage mimeMessage)
+        {
+            const string GMailAccount = "aqvarproduction@gmail.com";
+
+            var clientSecrets = new ClientSecrets
+            {
+                ClientId = _gmailKey.Authentication_Google_ClientId,
+                ClientSecret = _gmailKey.Authentication_Google_ClientSecret
+            };
+
+            var codeFlow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+            {
+                // Cache tokens in ~/.local/share/google-filedatastore/CredentialCacheFolder on Linux/Mac
+                DataStore = new FileDataStore("CredentialCacheFolder", false),
+                Scopes = new[] { "https://mail.google.com/" },
+                ClientSecrets = clientSecrets
+            });
+
+            var codeReceiver = new LocalServerCodeReceiver();
+            var authCode = new AuthorizationCodeInstalledApp(codeFlow, codeReceiver);
+            var credential = await authCode.AuthorizeAsync(GMailAccount, CancellationToken.None);
+
+            if (authCode.ShouldRequestAuthorizationCode(credential.Token))
+                await credential.RefreshTokenAsync(CancellationToken.None);
+
+            var oauth2 = new SaslMechanismOAuth2(credential.UserId, credential.Token.AccessToken);
+
+            using (var client = new ImapClient())
+            {
+                await client.ConnectAsync("imap.gmail.com", 993, SecureSocketOptions.SslOnConnect);
+                await client.AuthenticateAsync(oauth2);
+                //await client.SendAsync(mimeMessage);
+                await client.DisconnectAsync(true);
+            }
+
+            
         }
 
         public void SendEmailAsync(Message message)

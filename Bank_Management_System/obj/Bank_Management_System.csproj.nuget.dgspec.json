@@ -58,9 +58,29 @@
               "target": "Package",
               "version": "[8.1.1, )"
             },
+            "EASendMail": {
+              "target": "Package",
+              "version": "[7.7.0.8, )"
+            },
+            "Google.Apis": {
+              "target": "Package",
+              "version": "[1.51.0, )"
+            },
+            "Google.Apis.Auth": {
+              "target": "Package",
+              "version": "[1.51.0, )"
+            },
+            "Google.Apis.Gmail.v1": {
+              "target": "Package",
+              "version": "[1.51.0.2321, )"
+            },
+            "Microsoft.AspNetCore.Authentication.Core": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[3.1.14, )"
+              "version": "[3.0.0, )"
             },
             "Microsoft.AspNetCore.Hosting": {
               "target": "Package",
@@ -321,6 +341,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "Google.Apis.Auth": {
+              "target": "Package",
+              "version": "[1.51.0, )"
+            },
             "Microsoft.AspNetCore.Hosting": {
               "target": "Package",
               "version": "[2.2.7, )"

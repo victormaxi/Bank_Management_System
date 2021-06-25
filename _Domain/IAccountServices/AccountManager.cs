@@ -17,7 +17,7 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-//using iTextSharp.text.html.simpleparser;
+using Microsoft.EntityFrameworkCore;
 
 namespace _Domain.IAccountServices
 {
@@ -25,15 +25,17 @@ namespace _Domain.IAccountServices
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpContextAccessor _httpContext;
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
-        public AccountManager(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContext, IConfiguration configuration)
+        public AccountManager(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _signInManager = signInManager;
             _emailSender = emailSender;
             _webHostEnvironment = webHostEnvironment;
             _httpContext = httpContext;
@@ -106,7 +108,7 @@ namespace _Domain.IAccountServices
                             IsSuccess = false,
                         };
                     }
-                    string uniqueFileName = UploadedFile(model);
+                  //  string uniqueFileName = UploadedFile(model);
                    
                     var checkCount = _dbContext.Users.Count() == 0;
                     
@@ -120,9 +122,11 @@ namespace _Domain.IAccountServices
                             UserName = model.Username,
                             Email = model.Email,
                             PasswordHash = model.Password,
-                            ImageUrl = uniqueFileName,
-                            AccountType = AccountType.Admin
-
+                            //PhotoPath = model.PhotoPath,
+                            AccountType = model.AccountType,
+                            FullName = model.FirstName + model.LastName
+                            
+                          
                         };
                         var result = await _userManager.CreateAsync(IdentityUser1, model.Password);
                         if(result.Succeeded)
@@ -130,7 +134,7 @@ namespace _Domain.IAccountServices
                             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(IdentityUser1);
                             var encodedEmailToken = Encoding.UTF8.GetBytes(confirmationToken);
                             var validEmailToken = WebEncoders.Base64UrlEncode(encodedEmailToken);
-                            var callbackUrl = $"{_configuration["WebUrl"]}/account/ConfirmEmail?userid={IdentityUser1.Id}&token={validEmailToken}";
+                            var callbackUrl = $"{_configuration["WebUrl"]}/account/ConfirmEmail?userId={IdentityUser1.Id}&token={validEmailToken}";
 
                             var message = new Message(new string[] { model.Email }, "Confirm Email", callbackUrl, null);
 
@@ -150,8 +154,8 @@ namespace _Domain.IAccountServices
                         UserName = model.Username,
                         Email = model.Email,
                         PasswordHash = model.Password,
-                        ImageUrl = uniqueFileName,
-                        AccountType = AccountType.Customer
+                        //PhotoPath = model.PhotoPath,
+                        AccountType = model.AccountType
 
                     };
 
@@ -239,7 +243,7 @@ namespace _Domain.IAccountServices
         }
 
 
-        public async Task<ResponseManager> LoginAsync (LoginVM model)
+        public async Task<object> LoginAsync (LoginVM model)
         {
             try
             {
@@ -252,9 +256,17 @@ namespace _Domain.IAccountServices
                         IsSuccess = false
                     };
                 }
+                //var checkIfLockedOut = await LockOutUser(model);
+                //if (checkIfLockedOut.IsSuccess)
+                //    return new ResponseManager()
+                //    {
+                //        Message = "User is Locked Out. Please do change your password",
+                //        IsSuccess = false
+                //    };
 
                 var result = await _userManager.CheckPasswordAsync(userExist,model.Password);
-                if(!result)
+
+                if (!result)
                 {
                     return new ResponseManager
                     {
@@ -263,9 +275,32 @@ namespace _Domain.IAccountServices
                     };
                 }
 
+                //var res2 = await CheckRequiresTWA(model);
+
+             
+                //if (res2.IsSuccess)
+                //{
+
+                //    var user1 = new TwoStepAuthenticate()
+                //    {
+                //        RememberMe = model.RememberMe,
+
+                //    };
+
+                //  await TwoStepAuthentication(user1);
+                //    return new ResponseManager
+                //    {
+                //        Message = "Two step Authentication",
+                //        IsSuccess = true
+                //    };
+                      
+                //}
+                
+
                 var claims = new[]
                 {
-                    new Claim ("UserName", userExist.FullName),
+                    new Claim ("FullName",userExist.LastName + userExist.FirstName),
+                    new Claim ("UserName", userExist.UserName),
                     new Claim(ClaimTypes.NameIdentifier,userExist.Id)
                 };
 
@@ -275,56 +310,232 @@ namespace _Domain.IAccountServices
                     issuer: _configuration["AuthSettings:Issuer"],
                     audience: _configuration["AuthSettings:Audince"],
                     claims: claims,
-                    expires: DateTime.Now.AddHours(1),
+                    expires: DateTime.Now.AddDays(1),
                     signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                     );
 
                 string tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
 
-                return new ResponseManager
+                var resp = new AuthResponse
                 {
-                    Message = tokenAsString,
-                    IsSuccess = true,
-                    ExpireDate = token.ValidTo
+                    fullName = userExist.FirstName + " " + userExist.LastName,
+                    userId = userExist.Id,
+                    username = userExist.UserName,
+                    token = tokenAsString,
+                    email = userExist.Email,
+
                 };
+
+                return resp;
+                //return new ResponseManager
+                //{
+                //    Message = tokenAsString,
+                //    IsSuccess = true,
+                //    ExpireDate = token.ValidTo
+                //};
             }
             catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-        /// <summary>
-        /// Upload Image from folder 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        #region 
-        private string UploadedFile (RegisterVM model)
+
+        public async Task<ResponseManager> CheckRequiresTWA(LoginVM model)
         {
             try
             {
-                string uniqueFileName = null;
+               // var user = await _userManager.Users.SingleOrDefaultAsync(c => c.Email == model.Email);
 
-                if (model.Image != null)
+              
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+                if (result.Succeeded)
                 {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    using (var fileStream = new FileStream(filePath,FileMode.Create))
+                    return new ResponseManager()
                     {
-                        model.Image.CopyToAsync(fileStream);
-                    }
+                        Message = "User dosen't require Two factor authentication",
+                        IsSuccess = false
+                    };
                 }
-                return uniqueFileName;
 
+                if (result.RequiresTwoFactor)
+                {
+                    return new ResponseManager()
+                    {
+                        Message = "User requires Two factor authentication",
+                        IsSuccess = true
+                    };
+                }
+                return new ResponseManager()
+                {
+                    Message = "",
+                    IsSuccess = false
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ResponseManager> TwoStepAuthentication(TwoStepAuthenticate model)
+        {
+            try
+            {
+                var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+                if(user == null)
+                {
+                    return new ResponseManager()
+                    {
+                        Message = "",
+                        IsSuccess = false
+                    };
+                }
+
+                var result = await _signInManager.TwoFactorSignInAsync("Email",
+                                                                                    model.TwoFactorCode,
+                                                                                    model.RememberMe,
+                                                                                    rememberClient: false);
+                if (result.Succeeded)
+                {
+                    var claims = new[]
+               {
+                    new Claim ("UserName", user.FullName),
+                    new Claim(ClaimTypes.NameIdentifier,user.Id)
+                };
+
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AuthSettings:Key"]));
+
+                    var token = new JwtSecurityToken(
+                        issuer: _configuration["AuthSettings:Issuer"],
+                        audience: _configuration["AuthSettings:Audince"],
+                        claims: claims,
+                        expires: DateTime.Now.AddHours(1),
+                        signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+                        );
+
+                    string tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
+
+                    return new ResponseManager
+                    {
+                        Message = tokenAsString,
+                        IsSuccess = true,
+                        ExpireDate = token.ValidTo
+                    };
+                }
+                
+                return new ResponseManager()
+                {
+                    Message = "User is Lockedout",
+                    IsSuccess = result.IsLockedOut
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ResponseManager> LockOutUser(LoginVM model)
+        {
+            try
+            {
+                var checkIfLockOut = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+                if(checkIfLockOut.IsLockedOut)
+                {
+                    return new ResponseManager()
+                    {
+                        Message = "User is Locked out",
+                        IsSuccess = true
+                    };
+                }
+
+                return new ResponseManager()
+                {
+                    Message = "User is not Locked out",
+                    IsSuccess = false
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ResponseManager> ForgotPassword(string email)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null)
+                {
+                    return new ResponseManager()
+                    {
+                        Message = "No user associated with this email.",
+                        IsSuccess = false
+                    };
+                }
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = Encoding.UTF8.GetBytes(token);
+                var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+                string url = $"{_configuration["AppUrl"]}/ResetPassword?email={email}&token={validToken}";
+
+                var message = new Message(new string[] { email }, "Reset your password", url, null);
+                _emailSender.SendConfirmEmailAsync(message);
+
+                
+                return new ResponseManager()
+                {
+                    Message = "Please check email for link to change password",
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<object> UserProfile(string userId)
+        {
+           try
+            {
+               
+
+                var result = await _dbContext.Users.Include(s => s.ImageFile).SingleOrDefaultAsync(s => s.ImageFile.Id == userId);
+
+                var newResult = new ProfileVM
+                {
+                    FullName = result.LastName +" "+ result.FirstName,
+                    Image = result.ImageFile.ImagePath,
+                    UserName = result.UserName,
+                    AccountType = result.AccountType
+                };
+              
+                if (result != null)
+                {
+                    var res = new ResponseManager()
+                    {
+                        Message = "User Profile",
+                        IsSuccess = true
+                    };
+                    return (newResult);
+                }
+                return null;
             }
             catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+      
 
-        #endregion
+   
         private async void StoreInDatabase(byte[] imageBytes)
         {
             try
@@ -341,8 +552,8 @@ namespace _Domain.IAccountServices
                         ImageId = 0
                     };
 
-                   await _dbContext.ImageStores.AddAsync(imageStore);
-                   await  _dbContext.SaveChangesAsync();
+                   //await _dbContext.ImageStores.AddAsync(imageStore);
+                   //await  _dbContext.SaveChangesAsync();
                 }
 
             }
@@ -352,6 +563,9 @@ namespace _Domain.IAccountServices
             }
         }
 
-       
+        public Task<object> GetUserProfile(string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

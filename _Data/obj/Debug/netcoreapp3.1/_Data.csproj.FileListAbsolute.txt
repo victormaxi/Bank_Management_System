@@ -1,12 +1,12 @@
 C:\Users\admin\source\repos\Bank_Management_System\_Data\bin\Debug\netcoreapp3.1\_Data.deps.json
 C:\Users\admin\source\repos\Bank_Management_System\_Data\bin\Debug\netcoreapp3.1\_Data.dll
 C:\Users\admin\source\repos\Bank_Management_System\_Data\bin\Debug\netcoreapp3.1\_Data.pdb
+C:\Users\admin\source\repos\Bank_Management_System\_Data\bin\Debug\netcoreapp3.1\_Core.dll
+C:\Users\admin\source\repos\Bank_Management_System\_Data\bin\Debug\netcoreapp3.1\_Core.pdb
 C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.csprojAssemblyReference.cache
 C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.AssemblyInfoInputs.cache
 C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.AssemblyInfo.cs
+C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.csproj.CoreCompileInputs.cache
+C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.csproj.CopyComplete
 C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.dll
 C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.pdb
-C:\Users\admin\source\repos\Bank_Management_System\_Data\bin\Debug\netcoreapp3.1\_Core.dll
-C:\Users\admin\source\repos\Bank_Management_System\_Data\bin\Debug\netcoreapp3.1\_Core.pdb
-C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.csproj.CopyComplete
-C:\Users\admin\source\repos\Bank_Management_System\_Data\obj\Debug\netcoreapp3.1\_Data.csproj.CoreCompileInputs.cache

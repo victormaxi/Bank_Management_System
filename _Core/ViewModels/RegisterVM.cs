@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using _Core.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace _Core.ViewModels
@@ -41,11 +43,14 @@ namespace _Core.ViewModels
         [Display(Name ="Compare Password")]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
+        public string PhotoPath { get; set; }
 
-        [Required(ErrorMessage ="Please upload a photo")]
-        [Display(Name ="Profile Image")]
-        public IFormFile Image { get; set; }
+        //public string ImageUrl { get; set; }
 
-        public ImageStoreVM ImageStoreVM { get; set; }
+        //[Required(ErrorMessage = "Please upload a photo")]
+        [Display(Name = "Profile Image")]
+        public IFormFile? Photo { get; set; } = null;
+
+
     }
 }

@@ -165,12 +165,24 @@ namespace _Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ConfirmPassword")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -249,9 +261,31 @@ namespace _Data.Migrations
                     b.Property<string>("ChequeType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ChequeId");
 
                     b.ToTable("Cheques");
+                });
+
+            modelBuilder.Entity("_Core.Models.ImageFile", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImageFiles");
                 });
 
             modelBuilder.Entity("_Core.Models.Loan", b =>
@@ -270,6 +304,21 @@ namespace _Data.Migrations
                     b.HasKey("LoanId");
 
                     b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("_Core.Models.Picture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Images")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pictures");
                 });
 
             modelBuilder.Entity("_Core.Models.Transactions", b =>
@@ -345,6 +394,22 @@ namespace _Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("_Core.Models.ImageFile", b =>
+                {
+                    b.HasOne("_Core.Models.ApplicationUser", "ApplicationUser")
+                        .WithOne("ImageFile")
+                        .HasForeignKey("_Core.Models.ImageFile", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("_Core.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("ImageFile");
                 });
 #pragma warning restore 612, 618
         }

@@ -17,10 +17,26 @@ namespace _Data
             public DbSet<Bank> Banks { get; set; }
             public DbSet<Transactions> Transactions { get; set; }
             public DbSet<Cheque> Cheques { get; set; }
-            public DbSet<ImageStore> ImageStores { get; set; }
+           // public DbSet<ImageStore> ImageStores { get; set; }
+        public DbSet<Picture> Pictures { get; set; }
+
+        public DbSet<ImageFile> ImageFiles { get; set; }
 
 
         // public DbSet<Role> Roles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ApplicationUser>()
+                
+                .HasOne(a => a.ImageFile)
+                .WithOne(b => b.ApplicationUser)
+                
+                .HasForeignKey<ImageFile>(b => b.Id)
+                
+                ;
+        }
 
     }
 }

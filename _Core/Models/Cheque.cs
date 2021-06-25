@@ -9,6 +9,7 @@ namespace _Core.Models
         public int ChequeId { get; set; }
         public int ChequeNumber { get; set; }
         public decimal Amount { get; set; }
+        public string ImageURL { get; set; }
         public string ChequeType { get; set; }
     }
 }

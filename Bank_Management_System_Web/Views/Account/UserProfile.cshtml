@@ -1,0 +1,25 @@
+﻿@model _Core.ViewModels.ProfileVM
+
+@{
+    ViewData["Title"] = "User Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if(Model == null)
+{
+    <h4>Please Update your Profile</h4>
+}
+
+<div class="container">
+    <table class="table">
+        <tr>
+            <th> Username</th>
+            <th>Profile Image</th>
+        </tr>
+        <tr>
+            <td>@Model.UserName</td>
+            <td><img src="~/image/@Model.Image" class="rounded-circle" width="90" height="70" asp-append-version="true" /></td>
+        </tr>
+        <
+    </table>
+</div>

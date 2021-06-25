@@ -8,7 +8,8 @@ namespace _Core.Utility
     {
         public string From { get; set; }
         public string SmtpServer { get; set; }
-        public int Port { get; set; }
+        public int Port_SSL { get; set; }
+        public int GmailSMTP_port { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
     }

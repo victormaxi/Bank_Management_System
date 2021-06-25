@@ -8,7 +8,9 @@ using _Core.Models;
 using _Core.Utility;
 using _Data;
 using _Domain.CustomValidation;
+using _Domain.EmailManager;
 using _Domain.IAccountServices;
+using _Domain.ImageManager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +43,9 @@ namespace Bank_Management_System
             var emailConfig = Configuration.GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
+            var gmailConfig = Configuration.GetSection("GmailKey")
+                .Get<GmailKey>();
+            services.AddSingleton(gmailConfig);
             services.AddControllers();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -54,16 +59,21 @@ namespace Bank_Management_System
                 options.Lockout.AllowedForNewUsers = true;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(120);
                 options.Lockout.MaxFailedAccessAttempts = 3;
-                options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
-            }).AddTokenProvider<EmailConfirmationTokenProvider<ApplicationUser>>("emailconfirmation")
+               // options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
+            }).AddDefaultTokenProviders()
+            .AddTokenProvider<EmailConfirmationTokenProvider<ApplicationUser>>("emailconfirmation")
             .AddPasswordValidator<CustomPasswordValidator<ApplicationUser>>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            
+            .AddSignInManager();
+
 
 
             services.AddAuthentication(auth =>
             {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).
             AddJwtBearer(("Bearer"), options =>
              {
@@ -78,11 +88,15 @@ namespace Bank_Management_System
                      ValidateIssuerSigningKey = true
                  };
              });
+            
+           
             services.Configure<DataProtectionTokenProviderOptions>(opt =>
             opt.TokenLifespan = TimeSpan.FromHours(2));
             services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
             opt.TokenLifespan = TimeSpan.FromDays(3));
             services.AddScoped<IAccounts, AccountManager>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IImageManager, ImageManager>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         }

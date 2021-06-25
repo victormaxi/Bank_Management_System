@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\webcamjs\.git\config" />
+    <None Include="wwwroot\webcamjs\.git\description" />
+    <None Include="wwwroot\webcamjs\.git\HEAD" />
+    <None Include="wwwroot\webcamjs\.git\hooks\applypatch-msg.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\commit-msg.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\fsmonitor-watchman.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\post-update.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\pre-applypatch.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\pre-commit.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\pre-merge-commit.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\pre-push.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\pre-rebase.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\pre-receive.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\prepare-commit-msg.sample" />
+    <None Include="wwwroot\webcamjs\.git\hooks\update.sample" />
+    <None Include="wwwroot\webcamjs\.git\index" />
+    <None Include="wwwroot\webcamjs\.git\info\exclude" />
+    <None Include="wwwroot\webcamjs\.git\logs\HEAD" />
+    <None Include="wwwroot\webcamjs\.git\logs\refs\heads\master" />
+    <None Include="wwwroot\webcamjs\.git\logs\refs\remotes\origin\HEAD" />
+    <None Include="wwwroot\webcamjs\.git\objects\pack\pack-a2426bbc72e35e6e1c2c3a189438d90107333ca0.idx" />
+    <None Include="wwwroot\webcamjs\.git\objects\pack\pack-a2426bbc72e35e6e1c2c3a189438d90107333ca0.pack" />
+    <None Include="wwwroot\webcamjs\.git\packed-refs" />
+    <None Include="wwwroot\webcamjs\.git\refs\heads\master" />
+    <None Include="wwwroot\webcamjs\.git\refs\remotes\origin\HEAD" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\_Core\_Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\image\" />
+    <Folder Include="wwwroot\webcamjs\.git\objects\info\" />
+    <Folder Include="wwwroot\webcamjs\.git\refs\tags\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
