@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\admin\\source\\repos\\Bank_Management_System\\_Core\\_Core.csproj": {}
+    "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Core\\_Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\admin\\source\\repos\\Bank_Management_System\\_Core\\_Core.csproj": {
+    "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Core\\_Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\admin\\source\\repos\\Bank_Management_System\\_Core\\_Core.csproj",
+        "projectUniqueName": "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Core\\_Core.csproj",
         "projectName": "_Core",
-        "projectPath": "C:\\Users\\admin\\source\\repos\\Bank_Management_System\\_Core\\_Core.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\admin\\source\\repos\\Bank_Management_System\\_Core\\obj\\",
+        "projectPath": "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Core\\_Core.csproj",
+        "packagesPath": "C:\\Users\\Kelechi Onu\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Kelechi Onu\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],

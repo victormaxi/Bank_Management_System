@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using _Core.Interfaces;
+﻿using _Core.Interfaces;
+using _Core.Utility;
 using _Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Bank_Management_System.Controllers
 {
@@ -27,12 +25,35 @@ namespace Bank_Management_System.Controllers
             if (ModelState.IsValid)
             {
                 var upload = await _imageManager.UploadImage(imageVM);
-                if(upload != null)
+                if (upload != null)
                 {
                     return Ok(upload);
                 }
             }
             return BadRequest(ModelState);
+        }
+
+        [HttpGet("checkUserImage/{userId}")]
+        public async Task<IActionResult> CheckUserImage(string userId)
+        {
+            if (ModelState.IsValid)
+            {
+                var checkImageExist = await _imageManager.UserImageExist(userId);
+                  if (checkImageExist == null)
+                  {
+                    return BadRequest(new ResponseManager()
+                    {
+                        Message = "No image found",
+                        IsSuccess = false
+                    });
+                  }
+                return Ok(new ResponseManager()
+                {
+                    Message = "User image found",
+                    IsSuccess = true
+                });
+            }
+            return BadRequest();
         }
     }
 }

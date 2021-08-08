@@ -16,5 +16,8 @@ namespace Bank_Management_System_Web.Models.API
         public string UserImageLocation { get; set; }
         public string ImageUpload { get; set; }
         public string UserProfile { get; set; }
+        public string CheckUserImage { get; set; }
+        public string GetBills { get; set; }
+        public string GetBillBetails { get; set; }
     }
 }

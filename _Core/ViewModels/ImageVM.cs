@@ -14,5 +14,6 @@ namespace _Core.ViewModels
 
         [Display(Name = "Profile Image")]
         public IFormFile? Photo { get; set; } = null;
+        public RegisterVM RegisterVM { get; set; }
     }
 }

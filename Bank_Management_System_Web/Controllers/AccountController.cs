@@ -88,8 +88,14 @@ namespace Bank_Management_System_Web.Controllers
                     AccountType = model.AccountType,
                     Password = model.Password,
                     ConfirmPassword = model.ConfirmPassword,
+                    Roles = model.Roles,
                    // ImageUrl = url
-                   PhotoPath = UniqueFileName
+                   PhotoPath = UniqueFileName,
+                   ImageVM = new ImageVM
+                   {
+                       ImagePath = model.PhotoPath,
+                       
+                   }
                 };
 
 
@@ -121,6 +127,10 @@ namespace Bank_Management_System_Web.Controllers
             return View();
         }
 
+        public IActionResult ConfirmYourEmail()
+        {
+            return View();
+        }
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             try
@@ -240,10 +250,12 @@ namespace Bank_Management_System_Web.Controllers
                         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, authProperties);
+                       // var checkUserImage = CheckUserImageExist(authResponse.userId);
 
-                        return RedirectToAction( "UserProfile","Account", new {userId = authResponse.userId} );
+                        return RedirectToAction( "CheckUserImageExist","Account", new {userId = authResponse.userId} );
                     }
                     #endregion
+                    ViewBag.incorrectPassword = "Incorrect Password";
                     ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
                 }
                 return View();
@@ -253,7 +265,38 @@ namespace Bank_Management_System_Web.Controllers
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
+        }
+        public async Task<IActionResult> CheckUserImageExist(string userId)
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(_apiRequestUri.BaseUri);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var uri = string.Format(_apiRequestUri.CheckUserImage, userId);
 
+                HttpResponseMessage response = await httpClient.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                  return RedirectToAction("UserProfile", new { userId = userId });
+                }
+                else
+                {
+                    return RedirectToAction("ProfileImage");
+                }
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public IActionResult Welcome ()
         {
             return View();
@@ -386,7 +429,7 @@ namespace Bank_Management_System_Web.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Welcome");
+                    return RedirectToAction("UserProfile", new {userId = userId });
                 }
 
                 if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)

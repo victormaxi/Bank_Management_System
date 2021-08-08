@@ -11,6 +11,7 @@ using _Domain.CustomValidation;
 using _Domain.EmailManager;
 using _Domain.IAccountServices;
 using _Domain.ImageManager;
+using _Domain.TransactionServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -97,6 +98,7 @@ namespace Bank_Management_System
             services.AddScoped<IAccounts, AccountManager>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IImageManager, ImageManager>();
+            services.AddScoped<ITransaction, TransactionManager>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         }

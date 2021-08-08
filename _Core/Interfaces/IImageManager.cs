@@ -9,5 +9,6 @@ namespace _Core.Interfaces
    public interface IImageManager
     {
         Task<object> UploadImage(ImageVM imageVM);
+        Task<object> UserImageExist(string userId);
     }
 }

@@ -1,0 +1,47 @@
+﻿@model _Core.Models.Bill_Types
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    @if (Model != null)
+    {
+        <div class="container">
+            <table class="table">
+
+                <tr>
+                    <th>Bill Name</th>
+
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+
+
+            
+                
+                    <tr>
+                        <td>
+                         @Model.Bill_Name
+                        </td>
+                        <td>
+                            @Model.Amount
+                        </td>
+                    </tr>
+
+                
+
+            </table>
+        </div>
+    }
+
+
+
+</body>
+</html>

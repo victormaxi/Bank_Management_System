@@ -45,11 +45,16 @@ namespace _Core.ViewModels
         public string ConfirmPassword { get; set; }
         public string PhotoPath { get; set; }
 
+        [Display(Name = "User Type")]
+        [Required(ErrorMessage = "Please select user type")]
+        public string Roles { get; set; }
+
         //public string ImageUrl { get; set; }
 
         //[Required(ErrorMessage = "Please upload a photo")]
         [Display(Name = "Profile Image")]
         public IFormFile? Photo { get; set; } = null;
+        public ImageVM ImageVM { get; set; }
 
 
     }

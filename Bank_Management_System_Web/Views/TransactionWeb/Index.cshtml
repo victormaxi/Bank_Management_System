@@ -1,0 +1,51 @@
+﻿@model _Core.Models.Bill_Types
+@{ 
+    Layout = "_Layout2"; 
+}
+<div>
+    <label>Select Bill Type</label>
+    <select asp-for="Id" asp-items="@ViewBag.Bills" id="selectList">
+        <option value="">----Select Bill----</option>
+    </select>
+
+
+</div>
+
+
+<div class="producttable">
+    <table id="tblProducts">
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Amount
+            </th>
+        </tr>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        alert('here)');
+    })
+    $(function () {
+        $("#selectList").change(function () {
+            var Id = $(this).val();
+            var model = { billId: Id };
+            $.ajax({
+                type: "GET",
+                url: "/TransactionWeb/GetBill",
+                dataType: "JSON",
+                data: JSON.stringify(model),
+                success: function (data) {
+                    var table = $('#tblProducts');
+                    var trr = $('<tr/>');
+                    $(trr).append("<td>" + $("#selectList option:selected").text() + "</td>"
+                        + "<td>" + data.BillName + "</td>"
+                        + "<td>" + data.Amount + "</td>")
+                    $(table).append(trr);
+                }
+            });
+        });
+    });
+</script>

@@ -49,6 +49,16 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
+                        <label asp-for="Roles" class="control-label"></label>
+                        <select asp-for="Roles" class="form-control">
+                            <option value=" ">Please select User type</option>
+                            <option value="Cashier">Cashier</option>
+                            <option value="Customer">Customer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
                         <label asp-for="Password" class="control-label"></label>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>

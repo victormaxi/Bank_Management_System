@@ -8,10 +8,8 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,9 +29,9 @@ namespace _Domain.EmailManager
         {
             try
             {
-                var emailMessage =  ConfirmEmailMessage(message);
+                var emailMessage = ConfirmEmailMessage(message);
                 await SendAsync(emailMessage);
-                
+
             }
             catch (Exception ex)
             {
@@ -46,7 +44,7 @@ namespace _Domain.EmailManager
             try
             {
                 var emailMessage = CreateEmailMessageWithAttachment(message);
-               await SendAsync(emailMessage);
+                await SendAsync(emailMessage);
             }
             catch (Exception ex)
             {
@@ -62,7 +60,7 @@ namespace _Domain.EmailManager
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             { Text = string.Format(@"<h2> style = 'color:red;'> {0} </h2>", message.Content) };
 
-            return emailMessage; 
+            return emailMessage;
         }
         private MimeMessage CreateEmailMessageWithAttachment(Message message)
         {
@@ -73,12 +71,12 @@ namespace _Domain.EmailManager
 
             var bodyBuilder = new BodyBuilder { HtmlBody = string.Format("<h2 style='color:red;'>{0}</h2>", message.Content) };
 
-            if(message.Attachments != null && message.Attachments.Any())
+            if (message.Attachments != null && message.Attachments.Any())
             {
                 byte[] fileBytes;
-                foreach(var attachment in message.Attachments)
+                foreach (var attachment in message.Attachments)
                 {
-                    using(var ms = new MemoryStream())
+                    using (var ms = new MemoryStream())
                     {
                         attachment.CopyToAsync(ms);
                         fileBytes = ms.ToArray();
@@ -91,33 +89,33 @@ namespace _Domain.EmailManager
             return emailMessage;
         }
 
-        private async Task SendAsync (MimeMessage mailMessage)
+        private async Task SendAsync(MimeMessage mailMessage)
         {
             using (var client = new SmtpClient())
             {
                 try
                 {
                     await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port_SSL, true);
-                     client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    
-                    await client.AuthenticateAsync(_emailConfig.Username, _emailConfig.Password);
-                    
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
 
-                   await client.SendAsync(mailMessage);
+                    await client.AuthenticateAsync(_emailConfig.Username, _emailConfig.Password);
+
+
+                    await client.SendAsync(mailMessage);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     throw new Exception(ex.Message);
                 }
                 finally
                 {
-                   await client.DisconnectAsync(true);
+                    await client.DisconnectAsync(true);
                     client.Dispose();
                 }
             }
         }
 
-        private async Task Oauth (MimeMessage mimeMessage)
+        private async Task Oauth(MimeMessage mimeMessage)
         {
             const string GMailAccount = "aqvarproduction@gmail.com";
 
@@ -152,7 +150,7 @@ namespace _Domain.EmailManager
                 await client.DisconnectAsync(true);
             }
 
-            
+
         }
 
         public void SendEmailAsync(Message message)

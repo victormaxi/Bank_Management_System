@@ -207,6 +207,9 @@ namespace _Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Roles")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -243,6 +246,24 @@ namespace _Data.Migrations
                     b.HasKey("BankId");
 
                     b.ToTable("Banks");
+                });
+
+            modelBuilder.Entity("_Core.Models.Bill_Types", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Amount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Bill_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bill_Types");
                 });
 
             modelBuilder.Entity("_Core.Models.Cheque", b =>
@@ -331,8 +352,11 @@ namespace _Data.Migrations
                     b.Property<int>("AccountNumber")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Amount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
@@ -340,7 +364,12 @@ namespace _Data.Migrations
                     b.Property<string>("RecipientName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Transactions");
                 });
@@ -407,9 +436,20 @@ namespace _Data.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
+            modelBuilder.Entity("_Core.Models.Transactions", b =>
+                {
+                    b.HasOne("_Core.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Transactions")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("_Core.Models.ApplicationUser", b =>
                 {
                     b.Navigation("ImageFile");
+
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

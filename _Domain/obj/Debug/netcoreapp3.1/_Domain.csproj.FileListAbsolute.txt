@@ -12,3 +12,17 @@ C:\Users\admin\source\repos\Bank_Management_System\_Domain\obj\Debug\netcoreapp3
 C:\Users\admin\source\repos\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.csproj.CopyComplete
 C:\Users\admin\source\repos\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.dll
 C:\Users\admin\source\repos\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.pdb
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\bin\Debug\netcoreapp3.1\_Domain.deps.json
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\bin\Debug\netcoreapp3.1\_Domain.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\bin\Debug\netcoreapp3.1\_Domain.pdb
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\bin\Debug\netcoreapp3.1\_Core.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\bin\Debug\netcoreapp3.1\_Data.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\bin\Debug\netcoreapp3.1\_Core.pdb
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\bin\Debug\netcoreapp3.1\_Data.pdb
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.csprojAssemblyReference.cache
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.AssemblyInfoInputs.cache
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.AssemblyInfo.cs
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.csproj.CoreCompileInputs.cache
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.csproj.CopyComplete
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Domain\obj\Debug\netcoreapp3.1\_Domain.pdb

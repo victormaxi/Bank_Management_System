@@ -17,6 +17,8 @@ namespace _Data
             public DbSet<Bank> Banks { get; set; }
             public DbSet<Transactions> Transactions { get; set; }
             public DbSet<Cheque> Cheques { get; set; }
+
+        public DbSet<Bill_Types> Bill_Types { get; set; }
            // public DbSet<ImageStore> ImageStores { get; set; }
         public DbSet<Picture> Pictures { get; set; }
 
@@ -35,6 +37,14 @@ namespace _Data
                 
                 .HasForeignKey<ImageFile>(b => b.Id)
                 
+                ;
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(a => a.Transactions)
+                .WithOne(b => b.ApplicationUser);
+            //.HasForeignKey<Transactions>(c => c.UserId);
+
+            modelBuilder.Entity<Bill_Types>()
+
                 ;
         }
 

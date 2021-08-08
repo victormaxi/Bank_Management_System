@@ -3,21 +3,20 @@ using _Core.Models;
 using _Core.Utility;
 using _Core.ViewModels;
 using _Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.EntityFrameworkCore;
 
 namespace _Domain.IAccountServices
 {
@@ -26,17 +25,19 @@ namespace _Domain.IAccountServices
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IImageManager _imageManager;
         private readonly IEmailSender _emailSender;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpContextAccessor _httpContext;
         private readonly IConfiguration _configuration;
 
-        public AccountManager(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContext, IConfiguration configuration)
+        public AccountManager(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IImageManager imageManager, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _imageManager = imageManager;
             _webHostEnvironment = webHostEnvironment;
             _httpContext = httpContext;
             _configuration = configuration;
@@ -47,12 +48,12 @@ namespace _Domain.IAccountServices
             try
             {
                 var files = _httpContext.HttpContext.Request.Form.Files;
-               
-                if(files != null)
+
+                if (files != null)
                 {
-                    foreach( var file in files)
+                    foreach (var file in files)
                     {
-                        if(file.Length > 0)
+                        if (file.Length > 0)
                         {
                             //Getting FileName
                             var fileName = file.FileName;
@@ -65,13 +66,13 @@ namespace _Domain.IAccountServices
                             //Generating Path to store Photo
                             var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "CameraPhoto") + $@"\{newFileName}";
                             var imageBytes1 = System.IO.File.ReadAllBytes(filePath);
-                            if(!string.IsNullOrEmpty(filePath))
+                            if (!string.IsNullOrEmpty(filePath))
                             {
                                 //Store to database
                                 StoreInDatabase(imageBytes1);
                             }
                         }
-                       
+
                     }
                     return new ResponseManager()
                     {
@@ -81,7 +82,7 @@ namespace _Domain.IAccountServices
                 }
                 return null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -98,9 +99,9 @@ namespace _Domain.IAccountServices
                 // Please do remeber to change unique search value "firstname" to "username"
                 var exist = await _dbContext.Users.FindAsync(model.FirstName);
 
-                if(exist == null)
+                if (exist == null)
                 {
-                   if(model.Password != model.ConfirmPassword)
+                    if (model.Password != model.ConfirmPassword)
                     {
                         return new ResponseManager()
                         {
@@ -108,12 +109,11 @@ namespace _Domain.IAccountServices
                             IsSuccess = false,
                         };
                     }
-                  //  string uniqueFileName = UploadedFile(model);
-                   
-                    var checkCount = _dbContext.Users.Count() == 0;
-                    
+                    //  string uniqueFileName = UploadedFile(model);
 
-                    if(checkCount == true)
+                   // var checkCount = _dbContext.Users.Count() == 0;
+
+                    if (model.Roles == "Cashier")
                     {
                         var IdentityUser1 = new ApplicationUser()
                         {
@@ -123,13 +123,15 @@ namespace _Domain.IAccountServices
                             Email = model.Email,
                             PasswordHash = model.Password,
                             //PhotoPath = model.PhotoPath,
-                            AccountType = model.AccountType,
-                            FullName = model.FirstName + model.LastName
-                            
+                           // AccountType = model.AccountType,
+                            FullName = model.FirstName + model.LastName,
+                            Roles = Roles.Cashier
                           
+
+
                         };
                         var result = await _userManager.CreateAsync(IdentityUser1, model.Password);
-                        if(result.Succeeded)
+                        if (result.Succeeded)
                         {
                             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(IdentityUser1);
                             var encodedEmailToken = Encoding.UTF8.GetBytes(confirmationToken);
@@ -139,7 +141,7 @@ namespace _Domain.IAccountServices
                             var message = new Message(new string[] { model.Email }, "Confirm Email", callbackUrl, null);
 
                             _emailSender.SendConfirmEmailAsync(message);
-                           
+
 
                         }
                         //await _dbContext.Users.AddAsync(IdentityUser1);
@@ -148,14 +150,16 @@ namespace _Domain.IAccountServices
 
                     var IdentityUser2 = new ApplicationUser()
                     {
-                      
+
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         UserName = model.Username,
                         Email = model.Email,
                         PasswordHash = model.Password,
                         //PhotoPath = model.PhotoPath,
-                        AccountType = model.AccountType
+                        AccountType = model.AccountType,
+                        Roles = Roles.Customer
+                         
 
                     };
 
@@ -192,7 +196,7 @@ namespace _Domain.IAccountServices
                 };
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -204,7 +208,7 @@ namespace _Domain.IAccountServices
             {
                 var user = await _userManager.FindByIdAsync(userId);
 
-                if(user == null)
+                if (user == null)
                 {
                     return new ResponseManager
                     {
@@ -217,7 +221,7 @@ namespace _Domain.IAccountServices
                 string normalToken = Encoding.UTF8.GetString(decodedToken);
 
                 var result = await _userManager.ConfirmEmailAsync(user, normalToken);
-                
+
                 if (result.Succeeded)
                 {
                     return new ResponseManager
@@ -235,20 +239,21 @@ namespace _Domain.IAccountServices
                         Errors = result.Errors.Select(e => e.Description)
                     };
                 }
-;            }
-            catch(Exception ex)
+;
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
 
-        public async Task<object> LoginAsync (LoginVM model)
+        public async Task<object> LoginAsync(LoginVM model)
         {
             try
             {
                 var userExist = await _userManager.FindByEmailAsync(model.Email);
-                if(userExist == null)
+                if (userExist == null)
                 {
                     return new ResponseManager
                     {
@@ -264,7 +269,7 @@ namespace _Domain.IAccountServices
                 //        IsSuccess = false
                 //    };
 
-                var result = await _userManager.CheckPasswordAsync(userExist,model.Password);
+                var result = await _userManager.CheckPasswordAsync(userExist, model.Password);
 
                 if (!result)
                 {
@@ -276,8 +281,8 @@ namespace _Domain.IAccountServices
                 }
 
                 //var res2 = await CheckRequiresTWA(model);
+                
 
-             
                 //if (res2.IsSuccess)
                 //{
 
@@ -293,9 +298,9 @@ namespace _Domain.IAccountServices
                 //        Message = "Two step Authentication",
                 //        IsSuccess = true
                 //    };
-                      
+
                 //}
-                
+
 
                 var claims = new[]
                 {
@@ -326,6 +331,9 @@ namespace _Domain.IAccountServices
 
                 };
 
+              
+
+
                 return resp;
                 //return new ResponseManager
                 //{
@@ -334,7 +342,7 @@ namespace _Domain.IAccountServices
                 //    ExpireDate = token.ValidTo
                 //};
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -344,9 +352,9 @@ namespace _Domain.IAccountServices
         {
             try
             {
-               // var user = await _userManager.Users.SingleOrDefaultAsync(c => c.Email == model.Email);
+                // var user = await _userManager.Users.SingleOrDefaultAsync(c => c.Email == model.Email);
 
-              
+
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
 
                 if (result.Succeeded)
@@ -383,7 +391,7 @@ namespace _Domain.IAccountServices
             try
             {
                 var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-                if(user == null)
+                if (user == null)
                 {
                     return new ResponseManager()
                     {
@@ -423,7 +431,7 @@ namespace _Domain.IAccountServices
                         ExpireDate = token.ValidTo
                     };
                 }
-                
+
                 return new ResponseManager()
                 {
                     Message = "User is Lockedout",
@@ -443,7 +451,7 @@ namespace _Domain.IAccountServices
             {
                 var checkIfLockOut = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
 
-                if(checkIfLockOut.IsLockedOut)
+                if (checkIfLockOut.IsLockedOut)
                 {
                     return new ResponseManager()
                     {
@@ -488,7 +496,7 @@ namespace _Domain.IAccountServices
                 var message = new Message(new string[] { email }, "Reset your password", url, null);
                 _emailSender.SendConfirmEmailAsync(message);
 
-                
+
                 return new ResponseManager()
                 {
                     Message = "Please check email for link to change password",
@@ -503,20 +511,20 @@ namespace _Domain.IAccountServices
 
         public async Task<object> UserProfile(string userId)
         {
-           try
+            try
             {
-               
+
 
                 var result = await _dbContext.Users.Include(s => s.ImageFile).SingleOrDefaultAsync(s => s.ImageFile.Id == userId);
 
                 var newResult = new ProfileVM
                 {
-                    FullName = result.LastName +" "+ result.FirstName,
+                    FullName = result.LastName + " " + result.FirstName,
                     Image = result.ImageFile.ImagePath,
                     UserName = result.UserName,
                     AccountType = result.AccountType
                 };
-              
+
                 if (result != null)
                 {
                     var res = new ResponseManager()
@@ -528,19 +536,19 @@ namespace _Domain.IAccountServices
                 }
                 return null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-      
 
-   
+
+
         private async void StoreInDatabase(byte[] imageBytes)
         {
             try
             {
-                if(imageBytes != null)
+                if (imageBytes != null)
                 {
                     string base64String = Convert.ToBase64String(imageBytes, 0, imageBytes.Length);
                     string imageUrl = string.Concat("data:image/jpg;base64,", base64String);
@@ -552,12 +560,12 @@ namespace _Domain.IAccountServices
                         ImageId = 0
                     };
 
-                   //await _dbContext.ImageStores.AddAsync(imageStore);
-                   //await  _dbContext.SaveChangesAsync();
+                    //await _dbContext.ImageStores.AddAsync(imageStore);
+                    //await  _dbContext.SaveChangesAsync();
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

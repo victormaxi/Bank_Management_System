@@ -7,3 +7,12 @@ C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1
 C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.csproj.CoreCompileInputs.cache
 C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.dll
 C:\Users\admin\source\repos\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.pdb
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\bin\Debug\netcoreapp3.1\_Core.deps.json
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\bin\Debug\netcoreapp3.1\_Core.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\bin\Debug\netcoreapp3.1\_Core.pdb
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.AssemblyInfoInputs.cache
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.AssemblyInfo.cs
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.csproj.CoreCompileInputs.cache
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.pdb
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\_Core\obj\Debug\netcoreapp3.1\_Core.csprojAssemblyReference.cache
