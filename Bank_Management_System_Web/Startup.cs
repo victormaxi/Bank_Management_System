@@ -26,6 +26,7 @@ namespace Bank_Management_System_Web
             Configuration = configuration;
         }
 
+        readonly string _specificOrigin = "_specificOrigin";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -58,7 +59,14 @@ namespace Bank_Management_System_Web
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
             services.AddScoped<IResources, Resources>();
-            
+            services.AddCors(o =>
+            {
+                o.AddPolicy("_specificOrigin",
+                    p => p.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,6 +89,8 @@ namespace Bank_Management_System_Web
             app.UseCookiePolicy();
 
             app.UseRouting();
+
+            app.UseCors(_specificOrigin);
 
             app.UseAuthentication();
             app.UseAuthorization();

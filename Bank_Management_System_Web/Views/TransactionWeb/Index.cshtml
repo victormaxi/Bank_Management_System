@@ -1,51 +1,230 @@
 ﻿@model _Core.Models.Bill_Types
-@{ 
-    Layout = "_Layout2"; 
+@{
+    Layout = null;
 }
-<div>
-    <label>Select Bill Type</label>
-    <select asp-for="Id" asp-items="@ViewBag.Bills" id="selectList">
-        <option value="">----Select Bill----</option>
-    </select>
 
 
-</div>
 
 
-<div class="producttable">
-    <table id="tblProducts">
-        <tr>
-            <th>
-                Product Name
-            </th>
-            <th>
-                Amount
-            </th>
-        </tr>
-    </table>
-</div>
-<script>
-    $(document).ready(function () {
-        alert('here)');
-    })
-    $(function () {
-        $("#selectList").change(function () {
-            var Id = $(this).val();
-            var model = { billId: Id };
-            $.ajax({
-                type: "GET",
-                url: "/TransactionWeb/GetBill",
-                dataType: "JSON",
-                data: JSON.stringify(model),
-                success: function (data) {
-                    var table = $('#tblProducts');
-                    var trr = $('<tr/>');
-                    $(trr).append("<td>" + $("#selectList option:selected").text() + "</td>"
-                        + "<td>" + data.BillName + "</td>"
-                        + "<td>" + data.Amount + "</td>")
-                    $(table).append(trr);
+    @*<div>
+        <label>Select Bill Type</label>
+        <select id="country" asp-for="Id" asp-items="@ViewBag.Bills">
+            <option value="">----Select Bill----</option>
+        </select>
+
+
+
+    </div>*@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>JavaScript - Get selected value from dropdown list</title>
+        <script src="~/jquery/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <h1>JavaScript - Get selected value from dropdown list</h1>
+        <p id="result">United state</p>
+
+
+        <select id="country" asp-for="Id" asp-items="@ViewBag.Bills" onclick=" GetSelectedValue()">
+            <option value="">----Select Bill----</option>
+        </select>
+
+        <table id="myTable">
+            <tr>
+                <td>Row1 Cell1</td>
+                <td>Row1 Cell2</td>
+            </tr>
+            <tr>
+                <td>Row2 Cell1</td>
+                <td>Row2 Cell1</td>
+            </tr>
+
+
+        </table>
+
+        <table id="apiTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Bill Name</th>
+                    <th>Amount</th>
+
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <p id="rData">
+        </p>
+        <p>
+            Enter country name @Html.TextBox("Country")
+            <select id="country" asp-for="Id" asp-items="@ViewBag.Bills">
+                <option value="">----Select Bill----</option>
+            </select>
+            <input type="submit" id="country" value="Submit" />
+        </p>
+        <br />
+        <br />
+
+        <button id="btnGetAll">Get All</button> <br/>
+
+        <input type="text" id="txtStudentId" placeholder="Get by Id"/>
+        <button id="btnGet">Get a detail</button> 
+
+        <br/>
+        <input type="button" id="btnCreateHtmlTable" value="Create HTML table"/>
+
+        <div id="ResultArea"></div>
+        <script type="text/jscript">
+            //function popup() {
+            //    const Http = new XMLHttpRequest();
+            //    const url = 'https://localhost:44312/TransactionWeb/index2?id=' + '2';
+            //    Http.open("GET", url);
+            //    Http.send();
+
+            //    Http.onreadystatechange = (e) => {
+            //        console.log(Http.responseText);
+            //        alert("Hello");
+            //    }
+            //}
+
+            $(document).ready(function () {
+                $("#btnGetAll").click(function () {
+                    fetch("https://localhost:44312/TransactionWeb/index2")
+                        .then(res => {
+                            return res.json();
+                        })
+                        .then(data => console.log(data))
+                        .then(data => {
+                            if (data.data.length > 0) {
+                                var temp = "";
+                                data.data.forEach((itemData) => {
+                                    temp += "<tr>";
+                                    temp += "<td" + itemData.bill_Name + "</td>";
+                                    temp += "<td>" + itemData.Amount + "</td></tr>"
+                                });
+
+                                document.getElementById('myTable').innerHTML = temp;
+                            }
+                        })
+                        .catch(error => console.log(error))
+                }); 
+
+              
+                $("#btnGet").click(function () {
+                    var e = document.getElementById("country");
+                    var value = e.options[e.selectedIndex].value;
+                    fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + value)
+                    //fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + $("#txtStudentId").val())
+                        .then(res => {
+                            return res.json();
+                        })
+                        .then(data => {
+                          
+                            var table = document.getElementById("myTable");
+                            var row = table.insertRow(0);
+                            var cell1 = row.insertCell(0);
+                            var cell2 = row.insertCell(1);
+                            cell1.innerHTML = data.bill_Name;
+                            cell2.innerHTML = data.amount;
+                            //cell2.innerHTML = text;
+                            document.getElementById("myTable").deleteRow(1);
+                            console.log(data);
+                        })
+                        .then(data => console.log(data))
+
+                        .catch(error => console.log(error))
+
+                
+                 
+                   
+                  
+                });
+            }); 
+
+            function GetSelectedValue() {
+                var e = document.getElementById("country");
+                var value = e.options[e.selectedIndex].value;
+                fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + value)
+                    //fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + $("#txtStudentId").val())
+                    .then(res => {
+                        return res.json();
+                    })
+                    .then(data => {
+
+                        var table = document.getElementById("myTable");
+                        var row = table.insertRow(0);
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        cell1.innerHTML = data.bill_Name;
+                        cell2.innerHTML = data.amount;
+                        //cell2.innerHTML = text;
+                        document.getElementById("myTable").deleteRow(1);
+                        console.log(data);
+                    })
+                    .then(data => console.log(data))
+
+                    .catch(error => console.log(error))
+
+            }
+        </script>
+
+        @*@*<script>
+            function GetSelectedValue() {
+                var e = document.getElementById("country");
+                var value = e.options[e.selectedIndex].value;
+                var text = e.options[e.selectedIndex].text;
+                document.getElementById("result").innerHTML = value;
+                var table = document.getElementById("myTable");
+                var row = table.insertRow(0);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                cell1.innerHTML = value;
+                cell2.innerHTML = text;
+                document.getElementById("myTable").deleteRow(1);
+
+                var tbody = document.getElementById("apiTable").querySelector("tbody");
+                tbody.innerHTML = "";
+                if (this.readyState == 4 && this.status == 200) {
+                    JSON.parse(this.responseText).forEach(function (data, index) {
+                        tbody.innerHTML += "<tr><td>" + data.id + "</td>" + "<td>" + data.name + "</td>" + "<td>" + data.amount + "</td></tr>";
+                    });
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("GET", "https://localhost:44313/api/Transaction/GetBillDetails/" + document.getElementById("country").value, true);
+                    xhttp.send
+
+                    xhttp.onreadystatechange = function () {
+                        var tbody = document.getElementById("apiTable").querySelector("tbody");
+                        tbody.innerHTML = "";
+                        if (this.readyState == 4 && this.status == 200) {
+                            JSON.parse(this.responseText).forEach(function (data, index) {
+                                tbody.innerHTML += "<tr><td>" + data.id + "</td>" + "<td>" + data.name + "</td>" + "<td>" + data.amount + "</td></tr>";
+                            });
+                        }
+                    };
                 }
-            });
-        });
-    });
-</script>
+            }
+
+            function GetSelectedText() {
+                var e = document.getElementById("country");
+                var result = e.options[e.selectedIndex].text;
+                document.getElementById("result").innerHTML = result;
+            }
+
+       
+
+        </script>*@
+
+        <br />
+        <br />
+        <button type="button" onclick="GetSelectedValue()">Get selected value</button>
+        <button type="button" onclick="popup()">click</button>
+        <button type="button" onclick="GetSelectedText()">Get selected text</button>
+
+
+    </body>
+</html>

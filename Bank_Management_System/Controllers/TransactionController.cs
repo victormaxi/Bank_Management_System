@@ -40,7 +40,8 @@ namespace Bank_Management_System.Controllers
             try
             {
                 var bill = await _transaction.BillDetails(id);
-                return Ok(bill);
+               
+                return Json(bill);
             }
             catch(Exception ex)
             {

@@ -9,5 +9,6 @@ namespace _Core.Models
         public int Id { get; set; }
         public string Bill_Name { get; set; }
         public string Amount { get; set; }
+       
     }
 }

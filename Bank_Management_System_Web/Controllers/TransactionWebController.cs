@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using _Core.Models;
 using Bank_Management_System_Web.Models.API;
 using Bank_Management_System_Web.Services.Interface;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,30 @@ namespace Bank_Management_System_Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Index2()
+        {
+
+            var listOfBills = await _resource.GetBills();
+
+            return Json(listOfBills);
+        }
+
+        [HttpGet("Index3/{id}")]
+        public async Task<IActionResult> Index3(int id)
+        {
+
+            var bills = await _resource.GetBillDetailsAsync(id);
+            var newBill = new Bill_Types()
+            {
+                Id = bills.Id,
+                Bill_Name = bills.Bill_Name,
+                Amount = bills.Amount
+            };
+
+            return Json(newBill);
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -57,7 +82,7 @@ namespace Bank_Management_System_Web.Controllers
             return PartialView(bills);
         }
 
-        [HttpGet]
+        [HttpGet("GetBIll/{id}")]
         public async Task<JsonResult> GetBill (int id)
         {
             var selectBill = await _resource.GetBillDetailsAsync(id);

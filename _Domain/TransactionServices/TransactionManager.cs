@@ -26,9 +26,15 @@ namespace _Domain.TransactionServices
         {
             try
             {
-                var bill = await _dbContext.Bill_Types.FindAsync(id);
+                var bill = await _dbContext.Bill_Types.SingleOrDefaultAsync(c => c.Id==id);
 
-                return bill;
+                var newBill = new Bill_Types()
+                {
+                    Id = bill.Id,
+                    Bill_Name = bill.Bill_Name,
+                    Amount = bill.Amount
+                };
+                return newBill;
             }
             catch (Exception ex)
             {

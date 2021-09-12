@@ -36,6 +36,7 @@ namespace Bank_Management_System
             Configuration = configuration;
         }
 
+        readonly string _specificOrigin = "_specificOrigin";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -58,7 +59,7 @@ namespace Bank_Management_System
                 options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultEmailProvider;
                 options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
                 options.Lockout.AllowedForNewUsers = true;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(120);
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(10);
                 options.Lockout.MaxFailedAccessAttempts = 3;
                // options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
             }).AddDefaultTokenProviders()
@@ -100,8 +101,14 @@ namespace Bank_Management_System
             services.AddScoped<IImageManager, ImageManager>();
             services.AddScoped<ITransaction, TransactionManager>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-        }
+            services.AddCors(o =>
+            {
+                o.AddPolicy("_specificOrigin",
+                    p => p.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+                }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -111,9 +118,12 @@ namespace Bank_Management_System
                 app.UseDeveloperExceptionPage();
             }
 
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(_specificOrigin);
 
             app.UseAuthorization();
 
