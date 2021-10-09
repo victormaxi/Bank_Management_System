@@ -24,6 +24,7 @@ namespace _Data
 
         public DbSet<ImageFile> ImageFiles { get; set; }
 
+        public DbSet<PaymentLogs> PaymentLogs { get; set; }
 
         // public DbSet<Role> Roles { get; set; }
 

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using _Core.Models;
+using _Core.ViewModels;
 using Bank_Management_System_Web.Models.API;
 using Bank_Management_System_Web.Services.Interface;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Bank_Management_System_Web.Controllers
 {
@@ -88,6 +93,82 @@ namespace Bank_Management_System_Web.Controllers
             var selectBill = await _resource.GetBillDetailsAsync(id);
             return Json
                 (selectBill);
+        }
+        [HttpPost]
+        public async Task<IActionResult>BillPayment(Bill_Types bill2)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return View();
+
+                using var httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(_apiRequestUri.BaseUri);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var userId2 = GetUserId();
+
+                var bill = new BillPayment()
+                {
+                    userId = userId2,
+                    BillId = bill2.Id
+                };
+
+                var uri = string.Format(_apiRequestUri.BillPayment);
+
+                HttpResponseMessage response = (HttpResponseMessage)null;
+                response = await httpClient.PostAsJsonAsync(uri, bill);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("UserProfile", "Account", new { userId = userId2 });
+                }
+                if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
+                }
+                return Json(bill);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PaymentHistory()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return View();
+
+                using var httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(_apiRequestUri.BaseUri);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var userId = GetUserId();
+                var uri = string.Format(_apiRequestUri.PaymentHistory, userId);
+                HttpResponseMessage response = (HttpResponseMessage)null;
+                response = await httpClient.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiTassk = response.Content.ReadAsStringAsync();
+                    var responseString = apiTassk.Result;
+                    var model = JsonConvert.DeserializeObject<List<PaymentLogsVM>>(responseString);
+
+                    return View(model);
+                }
+
+                return View();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

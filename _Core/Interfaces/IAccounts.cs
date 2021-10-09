@@ -19,5 +19,6 @@ namespace _Core.Interfaces
         Task<ResponseManager> ForgotPassword(string email);
         Task<object> GetUserProfile(string userId);
         Task<object> UserProfile(string userId);
+        Task<object> UpdateUserProfile(EditUser user);
     }
 }

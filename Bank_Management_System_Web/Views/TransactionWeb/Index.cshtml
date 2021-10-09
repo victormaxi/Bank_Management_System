@@ -27,37 +27,50 @@
         <h1>JavaScript - Get selected value from dropdown list</h1>
         <p id="result">United state</p>
 
+        <form asp-action="BillPayment" method="post">
+            <select id="country" asp-for="Id" asp-items="@ViewBag.Bills" onclick=" GetSelectedValue()">
+                <option value="">----Select Bill----</option>
+            </select>
+            <input type="submit" value="Create" class="btn btn-primary"/>
+        </form>
+       
+        <button id="confirmPayment">Confirm Payment</button>
 
-        <select id="country" asp-for="Id" asp-items="@ViewBag.Bills" onclick=" GetSelectedValue()">
-            <option value="">----Select Bill----</option>
-        </select>
-
-        <table id="myTable">
+        <table id="table2">
+         
             <tr>
-                <td>Row1 Cell1</td>
-                <td>Row1 Cell2</td>
-            </tr>
-            <tr>
-                <td>Row2 Cell1</td>
-                <td>Row2 Cell1</td>
-            </tr>
+                <td><input id="txt1" type="text" /></td>
+                <td><input id="txt1" type="text" /></td>
 
-
+            </tr>
         </table>
-
-        <table id="apiTable">
-            <thead>
+        <form>
+            <table id="myTable">
+             
                 <tr>
-                    <th>ID</th>
-                    <th>Bill Name</th>
-                    <th>Amount</th>
-
+                    <td>Row2 Cell1</td>
+                    <td>Row2 Cell1</td>
                 </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
 
+
+            </table>
+
+            <table id="apiTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Bill Name</th>
+                        <th>Amount</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </form>
+
+        <button onclick="Billbtn()">Confirm Payment</button>
         <p id="rData">
         </p>
         <p>
@@ -70,27 +83,17 @@
         <br />
         <br />
 
-        <button id="btnGetAll">Get All</button> <br/>
+        <button id="btnGetAll">Get All</button> <br />
 
-        <input type="text" id="txtStudentId" placeholder="Get by Id"/>
-        <button id="btnGet">Get a detail</button> 
+        <input type="text" id="txtStudentId" placeholder="Get by Id" />
+        <button id="btnGet">Get a detail</button>
 
-        <br/>
-        <input type="button" id="btnCreateHtmlTable" value="Create HTML table"/>
+        <br />
+        <input type="button" id="btnCreateHtmlTable" value="Create HTML table" />
 
         <div id="ResultArea"></div>
         <script type="text/jscript">
-            //function popup() {
-            //    const Http = new XMLHttpRequest();
-            //    const url = 'https://localhost:44312/TransactionWeb/index2?id=' + '2';
-            //    Http.open("GET", url);
-            //    Http.send();
 
-            //    Http.onreadystatechange = (e) => {
-            //        console.log(Http.responseText);
-            //        alert("Hello");
-            //    }
-            //}
 
             $(document).ready(function () {
                 $("#btnGetAll").click(function () {
@@ -108,23 +111,23 @@
                                     temp += "<td>" + itemData.Amount + "</td></tr>"
                                 });
 
-                                document.getElementById('myTable').innerHTML = temp;
+                                document.getElementById('txt1').innerHTML = temp;
                             }
                         })
                         .catch(error => console.log(error))
-                }); 
+                });
 
-              
+
                 $("#btnGet").click(function () {
                     var e = document.getElementById("country");
                     var value = e.options[e.selectedIndex].value;
                     fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + value)
-                    //fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + $("#txtStudentId").val())
+                        //fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + $("#txtStudentId").val())
                         .then(res => {
                             return res.json();
                         })
                         .then(data => {
-                          
+
                             var table = document.getElementById("myTable");
                             var row = table.insertRow(0);
                             var cell1 = row.insertCell(0);
@@ -134,17 +137,39 @@
                             //cell2.innerHTML = text;
                             document.getElementById("myTable").deleteRow(1);
                             console.log(data);
+
+                            var table2 = document.getElementById("txt1");
+                            var row2 = table2.insertRow(0);
+                            var cell3 = row2.insertCell(0);
+                            var cell4 = row2.insertCell(1);
+                            cell3.value = data.bill_Name;
+                            cell4.value = data.amount;
+                            var textbox = document.getElementById("txt1");
+                            textbox.value = data.amount;
+
+                           
                         })
                         .then(data => console.log(data))
 
                         .catch(error => console.log(error))
 
-                
-                 
-                   
-                  
+
+
+
+
                 });
-            }); 
+
+
+                $("#confirmPayment").click(function () {
+                    var e = document.getElementById("country");
+                    var value = e.options[e.selectedIndex].value;
+                    fetch("https://localhost:44313/api/Transaction/BillPayment/" + value)
+                        //fetch("https://localhost:44313/api/Transaction/GetBillDetails/" + $("#txtStudentId").val())
+                        .then(res => {
+                            return res.json();
+                        })
+                });
+            });
 
             function GetSelectedValue() {
                 var e = document.getElementById("country");
@@ -163,9 +188,30 @@
                         cell1.innerHTML = data.bill_Name;
                         cell2.innerHTML = data.amount;
                         //cell2.innerHTML = text;
+
+                        var textbox = document.getElementById("txt1");
+                        textbox.value = data.amount;
+                        textbox.innerHTML = data.amount;
                         document.getElementById("myTable").deleteRow(1);
                         console.log(data);
+
+                      
                     })
+                    .then(data => console.log(data))
+
+                    .catch(error => console.log(error))
+
+            }
+
+            function BillBtn() {
+                var e = document.getElementById("country");
+                var value = e.options[e.selectedIndex].value;
+                fetch("https://localhost:44313/api/Transaction/BillPayment/" + value)
+                  
+                    .then(res => {
+                        return res.json();
+                    })
+                  
                     .then(data => console.log(data))
 
                     .catch(error => console.log(error))
@@ -215,7 +261,7 @@
                 document.getElementById("result").innerHTML = result;
             }
 
-       
+
 
         </script>*@
 

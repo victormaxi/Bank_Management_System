@@ -48,5 +48,34 @@ namespace Bank_Management_System.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [Route("BillPayment")]
+        public async Task<ActionResult<object>> BillPayment (BillPayment payment)
+        {
+            try
+            {
+                var bill = await _transaction.BillPayment(payment);
+                return Ok(bill);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpGet("PaymentHistory/{userId}")]
+        public async Task<ActionResult<object>> PaymentHistory(string userId)
+        {
+            try
+            {
+                var result = await _transaction.PaymentHistory(userId);
+
+                return Json(result);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -15,11 +15,16 @@
         <tr>
             <th> Username</th>
             <th>Profile Image</th>
+            <th>Balance</th>
         </tr>
         <tr>
             <td>@Model.UserName</td>
             <td><img src="~/image/@Model.Image" class="rounded-circle" width="90" height="70" asp-append-version="true" /></td>
+            <td>@Model.Account</td>
+            <td><a asp-controller="Account" asp-action="UpdateUserProfile" class="btn btn-success">Edit</a></td>
+
+            <td><a asp-controller="TransactionWeb" asp-action="index" class="btn btn-success">Pay bill</a></td>
         </tr>
-        <
+    
     </table>
 </div>

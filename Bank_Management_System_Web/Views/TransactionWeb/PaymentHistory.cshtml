@@ -1,0 +1,40 @@
+﻿@using _Core.ViewModels;
+@model IEnumerable<_Core.ViewModels.PaymentLogsVM>
+@{ 
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name=" = viewport" content="width=device-width"/>
+    <title>Payment Logs</title>
+</head>
+<body>
+    <h4>History</h4>
+    <hr/>
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <th>Bill Name</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Reference Number</th>
+        </tr>
+        @foreach(PaymentLogsVM paymenlogs in Model)
+        {
+            <tr>
+                <td>@paymenlogs.BillName</td>
+                <td>@paymenlogs.Amount</td>
+                <td>@paymenlogs.Date</td>
+                <td>@paymenlogs.ReferenceNumber</td>
+            </tr>
+        }
+    </table>
+    <br/>
+    <br/>
+
+    <form method="post" asp-controller="Transactionweb" asp-action="Export">
+        <input type="submit" value="Download" />
+    </form>
+</body>
+</html>

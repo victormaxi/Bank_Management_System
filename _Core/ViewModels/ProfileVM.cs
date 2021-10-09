@@ -17,6 +17,6 @@ namespace _Core.ViewModels
         [Display(Name ="Account Type")]
         public string AccountType { get; set; }
         [Display(Name ="Account Balance")]
-        public decimal AccountBalance { get; set; }
+        public string Account { get; set; }
     }
 }

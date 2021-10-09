@@ -179,5 +179,25 @@ namespace Bank_Management_System.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("UpdateUserProfile")]
+        public async Task<IActionResult> UpdateUserProfile(EditUser user)
+        {
+            try
+            {
+                var result = await _account.UpdateUserProfile(user);
+
+                if(result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

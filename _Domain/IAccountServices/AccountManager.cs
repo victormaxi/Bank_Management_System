@@ -522,7 +522,8 @@ namespace _Domain.IAccountServices
                     FullName = result.LastName + " " + result.FirstName,
                     Image = result.ImageFile.ImagePath,
                     UserName = result.UserName,
-                    AccountType = result.AccountType
+                    AccountType = result.AccountType,
+                    Account = result.Amount
                 };
 
                 if (result != null)
@@ -574,6 +575,33 @@ namespace _Domain.IAccountServices
         public Task<object> GetUserProfile(string userId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<object> UpdateUserProfile(EditUser user)
+        {
+            try
+            {
+                var updateUser = await _dbContext.Users.FindAsync(user.UserId);
+                if(updateUser != null)
+                {
+                   
+                 
+                    updateUser.Amount = "#" + user.Amount;
+                    var result =  _dbContext.Users.Update(updateUser);
+                    var save = await _dbContext.SaveChangesAsync();
+                    if(save == 1)
+                    {
+                        return result;
+                    }
+                    return null;
+                }
+
+                return null;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

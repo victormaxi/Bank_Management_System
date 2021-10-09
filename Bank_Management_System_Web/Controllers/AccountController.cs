@@ -489,6 +489,57 @@ namespace Bank_Management_System_Web.Controllers
             }
             return View();
         }
+        [HttpGet]
+        public IActionResult UpdateUserProfile ()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserProfile(EditUser user)
+        {
+            try
+            {
+                if(ModelState.IsValid)
+                {
+
+                    var getUserId = GetUserId();
+                    using (var httpClient = new HttpClient())
+                    {
+                        httpClient.BaseAddress = new Uri(_apiRequestUri.BaseUri);
+                        httpClient.DefaultRequestHeaders.Accept.Clear();
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
+
+                        var uri = string.Format(_apiRequestUri.UpdateUserProfile);
+
+                        var user2 = new EditUser()
+                        {
+                            Amount = user.Amount,
+                            UserId = getUserId
+                        };
+                        HttpResponseMessage res = (HttpResponseMessage)null; ;
+                        res =  await httpClient.PostAsJsonAsync(uri, user2);
+
+                        if(res.IsSuccessStatusCode)
+                        {
+                            RedirectToAction("UserProfile", new { userId = getUserId});
+                            //var api = res.Content.ReadAsStringAsync();
+                            //var responseString = api.Result;
+                            //var model = JsonConvert.DeserializeObject<ProfileVM>(responseString);
+                            //return View(model);
+                        }
+                        
+                    }
+
+                }
+                return View();
+            }
+            catch(Exception  ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
       
     }

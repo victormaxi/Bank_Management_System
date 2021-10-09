@@ -24,6 +24,8 @@ namespace _Core.Models
         public ImageFile ImageFile { get; set; }
         public virtual List<Transactions> Transactions { get; set; } = new List<Transactions>();
         public string Roles { get; set; }
+
+        public string Amount { get; set; }
     }
 }
  
