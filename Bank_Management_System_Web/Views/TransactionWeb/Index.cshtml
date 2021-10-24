@@ -1,6 +1,7 @@
 ﻿@model _Core.Models.Bill_Types
 @{
-    Layout = null;
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
@@ -24,29 +25,30 @@
     </head>
 
     <body>
-        <h1>JavaScript - Get selected value from dropdown list</h1>
-        <p id="result">United state</p>
+        <h2>Select bill</h2>
+
+        @*<p id="result">United state</p>*@
 
         <form asp-action="BillPayment" method="post">
-            <select id="country" asp-for="Id" asp-items="@ViewBag.Bills" onclick=" GetSelectedValue()">
+            <select class="dropdown" id="country" asp-for="Id" asp-items="@ViewBag.Bills" onclick=" GetSelectedValue()">
                 <option value="">----Select Bill----</option>
             </select>
-            <input type="submit" value="Create" class="btn btn-primary"/>
+            <input type="submit" value="Confirm Payment" class="btn btn-primary" />
         </form>
-       
-        <button id="confirmPayment">Confirm Payment</button>
 
-        <table id="table2">
-         
+
+
+        @*<table id="table2">
+
             <tr>
                 <td><input id="txt1" type="text" /></td>
                 <td><input id="txt1" type="text" /></td>
 
             </tr>
-        </table>
+        </table>*@
         <form>
-            <table id="myTable">
-             
+            <table class="table table-bordered table table-info"id="myTable">
+
                 <tr>
                     <td>Row2 Cell1</td>
                     <td>Row2 Cell1</td>
@@ -55,7 +57,7 @@
 
             </table>
 
-            <table id="apiTable">
+            @*<table id="apiTable">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -66,11 +68,11 @@
                 </thead>
                 <tbody>
                 </tbody>
-            </table>
+            </table>*@
 
         </form>
 
-        <button onclick="Billbtn()">Confirm Payment</button>
+        @*<button onclick="Billbtn()">Confirm Payment</button>
         <p id="rData">
         </p>
         <p>
@@ -81,17 +83,20 @@
             <input type="submit" id="country" value="Submit" />
         </p>
         <br />
-        <br />
+        <br />*@
 
-        <button id="btnGetAll">Get All</button> <br />
+        @*<button id="btnGetAll">Get All</button> <br />
 
         <input type="text" id="txtStudentId" placeholder="Get by Id" />
         <button id="btnGet">Get a detail</button>
 
         <br />
-        <input type="button" id="btnCreateHtmlTable" value="Create HTML table" />
-
         <div id="ResultArea"></div>
+        <input type="button" id="btnCreateHtmlTable" value="Create HTML table" />*@
+
+
+
+
         <script type="text/jscript">
 
 
@@ -147,7 +152,7 @@
                             var textbox = document.getElementById("txt1");
                             textbox.value = data.amount;
 
-                           
+
                         })
                         .then(data => console.log(data))
 
@@ -187,15 +192,16 @@
                         var cell2 = row.insertCell(1);
                         cell1.innerHTML = data.bill_Name;
                         cell2.innerHTML = data.amount;
+                        document.getElementById("myTable").deleteRow(1);
                         //cell2.innerHTML = text;
 
-                        var textbox = document.getElementById("txt1");
-                        textbox.value = data.amount;
-                        textbox.innerHTML = data.amount;
-                        document.getElementById("myTable").deleteRow(1);
+                        //var textbox = document.getElementById("txt1");
+                        //textbox.value = data.amount;
+                        //textbox.innerHTML = data.amount;
+                        //document.getElementById("myTable").deleteRow(1);
                         console.log(data);
 
-                      
+
                     })
                     .then(data => console.log(data))
 
@@ -207,11 +213,11 @@
                 var e = document.getElementById("country");
                 var value = e.options[e.selectedIndex].value;
                 fetch("https://localhost:44313/api/Transaction/BillPayment/" + value)
-                  
+
                     .then(res => {
                         return res.json();
                     })
-                  
+
                     .then(data => console.log(data))
 
                     .catch(error => console.log(error))
@@ -265,11 +271,11 @@
 
         </script>*@
 
-        <br />
+        @*<br />
         <br />
         <button type="button" onclick="GetSelectedValue()">Get selected value</button>
         <button type="button" onclick="popup()">click</button>
-        <button type="button" onclick="GetSelectedText()">Get selected text</button>
+        <button type="button" onclick="GetSelectedText()">Get selected text</button>*@
 
 
     </body>

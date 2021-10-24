@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript - Get selected value from dropdown list</title>
+    
+    <script src="~/jquery/jquery.twbsPagination.min.js"></script>
+
+</head>
+<body>
+    <table id="History" class="table table-bordered table table-hover" cellspacing="0" width="100%">
+        <colgroup><col /><col /><col /></colgroup>
+        <thead>
+            <tr>
+                <th>Bill Name</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Refernce Number</th>
+            </tr>
+        </thead>
+        <tbody id="pay_history">
+
+        </tbody>
+    </table>
+    <div id="pager">
+        <ul id="pagination" class="pagination-sm"></ul>
+    </div>
+</body>
+</html>
+
+<script>
+    var $pagination = $('#pagination'),
+        totalRecords = 0,
+        records = [],
+        displayRecords = [],
+        recPerPage = 10,
+        page = 1,
+        totalPages = 0;
+
+    $.ajax({
+        url: "/transactionweb/pagination",
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            records = data;
+            console.log(records);
+            totalRecords = records.length;
+            totalPages = Math.ceil(totalRecords / recPerPage);
+            apply_pagination();
+        }
+    });
+
+    function generate_table() {
+        var tr;
+        $('#pay_history').html('');
+        for (var i = 0; i < displayRecords.length; i++) {
+            br = $('<tr/>');
+            tr.append("<td" + displayRecords[i].Bill_Name + "</td>");
+            tr.append("<td" + displayRecords[i].Amount + "</td>");
+            tr.append("<td" + displayRecords[i].Date + "</td>");
+            tr.append("<td" + displayRecords[i].ReferenceNumber + "</td>");
+
+            $('#pay_history').append(tr);
+        }
+    }
+    
+    function apply_paagination() {
+        $pagination.twbsPagination({
+            totalPages: totalPages,
+            visiblePages: 6,
+            onPageClick: function (event, page) {
+                displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+                endRec = (displayRecordsIndex) + recPerPage;
+
+                displayRecords = records.slice(displayRecordsIndex, endRec);
+                generate_table();
+            }
+        });
+    }
+</script>

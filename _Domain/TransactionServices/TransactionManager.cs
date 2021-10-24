@@ -72,10 +72,18 @@ namespace _Domain.TransactionServices
                 _dbContext.PaymentLogs.Update(log);
                 var result = _dbContext.Users.Update(user);
                 var save = await _dbContext.SaveChangesAsync();
+                var logReturn = new PaymentLogsVM
+                {
+                    BillId = log.Id,
+                    BillName = log.BillName,
+                    Amount = log.Amount,
+                    Date = log.Date,
+                    ReferenceNumber = log.ReferenceNumber
+                };
                 if (save != 0)
                 {
                     var success = "Transaction was Successful";
-                    return success;
+                    return logReturn;
                 }
                
                 return null;
@@ -141,11 +149,27 @@ namespace _Domain.TransactionServices
             }
         }
 
-        public async Task<object> PaymentHistory(string userId)
+        public async Task<object> PaymentHistory(int billId)
         {
             try
             {
-                List<PaymentLogs> logs = (from paymentlog in _dbContext.PaymentLogs.Take(10) select paymentlog).ToList();
+                //List<PaymentLogs> logs = (from paymentlog in _dbContext.PaymentLogs.Take(10) select paymentlog).ToList();
+                var log = await _dbContext.PaymentLogs.FirstOrDefaultAsync(a => a.Id == billId);
+
+                return log;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<object> GetAllPaymentHistory()
+        {
+            try
+            {
+                //List<PaymentLogs> logs = await (from paymentlog in _dbContext.PaymentLogs.Take(10) select paymentlog).ToListAsync();
+                List<PaymentLogs> logs = await _dbContext.PaymentLogs.ToListAsync();
 
                 return logs;
             }

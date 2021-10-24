@@ -189,3 +189,6 @@ C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_S
 C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System_Web\obj\Debug\netcoreapp3.1\Bank_Management_System_Web.pdb
 C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System_Web\obj\Debug\netcoreapp3.1\Bank_Management_System_Web.genruntimeconfig.cache
 C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System_Web\obj\Debug\netcoreapp3.1\Razor\Views\TransactionWeb\PaymentHistory.cshtml.g.cs
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System_Web\obj\Debug\netcoreapp3.1\Razor\Views\TransactionWeb\_PartialBillView.cshtml.g.cs
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System_Web\obj\Debug\netcoreapp3.1\Razor\Views\TransactionWeb\GetAllPaymentHistory.cshtml.g.cs
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System_Web\obj\Debug\netcoreapp3.1\Razor\Views\TransactionWeb\Pagination.cshtml.g.cs

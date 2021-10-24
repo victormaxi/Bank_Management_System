@@ -476,6 +476,7 @@ namespace Bank_Management_System_Web.Controllers
                             }
                             else
                             {
+                                ViewBag.FullName = model.FullName;
                                 return View(model);
                             }
                         }

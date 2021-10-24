@@ -23,5 +23,6 @@ namespace Bank_Management_System_Web.Models.API
         public string GetBillBetails { get; set; }
         public string BillPayment { get; set; }
         public string PaymentHistory { get; set; }
+        public string GetAllPaymentHistory { get; set; }
     }
 }

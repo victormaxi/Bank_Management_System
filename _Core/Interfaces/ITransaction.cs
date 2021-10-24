@@ -16,6 +16,7 @@ namespace _Core.Interfaces
         Task<object> BillTypes();
         Task<object> BillDetails(int id);
         Task<object> BillPayment(BillPayment payment);
-        Task<object> PaymentHistory(string userId);
+        Task<object> PaymentHistory(int billId);
+        Task<object> GetAllPaymentHistory();
     }
 }

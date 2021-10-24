@@ -1,7 +1,7 @@
-﻿@using _Core.ViewModels;
-@model IEnumerable<_Core.ViewModels.PaymentLogsVM>
+﻿
+@model _Core.ViewModels.PaymentLogsVM
 @{ 
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -13,14 +13,20 @@
 <body>
     <h4>History</h4>
     <hr/>
-    <table cellpadding="0" cellspacing="0">
+    <table class="table table-bordered" cellpadding="5" cellspacing="5">
         <tr>
             <th>Bill Name</th>
             <th>Amount</th>
             <th>Date</th>
             <th>Reference Number</th>
         </tr>
-        @foreach(PaymentLogsVM paymenlogs in Model)
+        <tr>
+            <td>@Model.BillName</td>
+            <td>@Model.Amount</td>
+            <td>@Model.Date</td>
+            <td>@Model.ReferenceNumber</td>
+        </tr>
+        @*@foreach(PaymentLogsVM paymenlogs in Model)
         {
             <tr>
                 <td>@paymenlogs.BillName</td>
@@ -28,7 +34,7 @@
                 <td>@paymenlogs.Date</td>
                 <td>@paymenlogs.ReferenceNumber</td>
             </tr>
-        }
+        }*@
     </table>
     <br/>
     <br/>

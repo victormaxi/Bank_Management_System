@@ -196,3 +196,8 @@ C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_S
 C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\obj\Debug\netcoreapp3.1\Bank_Management_System.dll
 C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\obj\Debug\netcoreapp3.1\Bank_Management_System.pdb
 C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\obj\Debug\netcoreapp3.1\Bank_Management_System.genruntimeconfig.cache
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\bin\Debug\netcoreapp3.1\ClosedXML.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\bin\Debug\netcoreapp3.1\DocumentFormat.OpenXml.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\bin\Debug\netcoreapp3.1\ExcelNumberFormat.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\bin\Debug\netcoreapp3.1\itextsharp.dll
+C:\Users\Kelechi Onu\Documents\Projects\Bank_Management_System\Bank_Management_System\bin\Debug\netcoreapp3.1\System.IO.Packaging.dll

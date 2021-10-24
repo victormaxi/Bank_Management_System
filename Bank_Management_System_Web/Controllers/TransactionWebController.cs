@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using _Core.Models;
 using _Core.ViewModels;
+using Bank_Management_System_Web.Models;
 using Bank_Management_System_Web.Models.API;
 using Bank_Management_System_Web.Services.Interface;
 using Microsoft.AspNetCore.Hosting;
@@ -122,12 +123,17 @@ namespace Bank_Management_System_Web.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("UserProfile", "Account", new { userId = userId2 });
+                    //return RedirectToAction("UserProfile", "Account", new { userId = userId2 });
+                    var apiTassk = response.Content.ReadAsStringAsync();
+                    var responseString = apiTassk.Result;
+                    var model = JsonConvert.DeserializeObject<PaymentLogsVM>(responseString);
+                    return RedirectToAction("PaymentHistory", new { BillId = model.BillId});
                 }
                 if(response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
                 }
+                
                 return Json(bill);
             }
             catch (Exception ex)
@@ -137,7 +143,7 @@ namespace Bank_Management_System_Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PaymentHistory()
+        public async Task<IActionResult> PaymentHistory(int billId)
         {
             try
             {
@@ -150,7 +156,7 @@ namespace Bank_Management_System_Web.Controllers
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 var userId = GetUserId();
-                var uri = string.Format(_apiRequestUri.PaymentHistory, userId);
+                var uri = string.Format(_apiRequestUri.PaymentHistory, billId);
                 HttpResponseMessage response = (HttpResponseMessage)null;
                 response = await httpClient.GetAsync(uri);
 
@@ -158,7 +164,8 @@ namespace Bank_Management_System_Web.Controllers
                 {
                     var apiTassk = response.Content.ReadAsStringAsync();
                     var responseString = apiTassk.Result;
-                    var model = JsonConvert.DeserializeObject<List<PaymentLogsVM>>(responseString);
+                    var model = JsonConvert.DeserializeObject<PaymentLogsVM>(responseString);
+                    //var model = JsonConvert.DeserializeObject<List<PaymentLogsVM>>(responseString);
 
                     return View(model);
                 }
@@ -166,6 +173,102 @@ namespace Bank_Management_System_Web.Controllers
                 return View();
             }
             catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> GetAllPaymentHistory(string sortOrder, string currentFilter, string searchString ,int pg=1)
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(_apiRequestUri.BaseUri);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var uri = string.Format(_apiRequestUri.GetAllPaymentHistory);
+                HttpResponseMessage response = (HttpResponseMessage)null;
+                response = await httpClient.GetAsync(uri);
+
+                if(response.IsSuccessStatusCode)
+                {
+                    var apiTask = response.Content.ReadAsStringAsync();
+                    var responseString = apiTask.Result;
+                    var model = JsonConvert.DeserializeObject<IEnumerable<PaymentLogsVM>>(responseString);
+                    ViewBag.CurrentSort = sortOrder;
+                    ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+                    
+                    if (searchString != null)
+                    {
+                        pg = 1;
+                    }
+                    else
+                    {
+                        searchString = currentFilter;
+                    }
+                    ViewBag.CurrentFilter = searchString;
+
+                    if(!String.IsNullOrEmpty(searchString))
+                    {
+                        model = model.Where(s => s.BillName.Contains(searchString));
+                    }
+
+                    switch(sortOrder)
+                    {
+                        case "name_desc" :
+                            model = model.OrderByDescending(s => s.BillName).ToList();
+                            break;
+                        default:
+                            model = model.OrderBy(s => s.BillName).ToList();
+                            break;
+                    }
+                    const int pageSize = 5;
+                    if (pg < 1)
+                        pg = 1;
+                    int resCCount = model.Count();
+                    var pager = new Pager(resCCount, pg, pageSize);
+                    int recSkip = (pg - 1) * pageSize;
+                    var data = model.Skip(recSkip).Take(pager.PageSize).ToList();
+                    this.ViewBag.Pager = pager;
+
+                    return View(data);
+                    //return View(model);
+                }
+                return View();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> Pagination()
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(_apiRequestUri.BaseUri);
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var uri = string.Format(_apiRequestUri.GetAllPaymentHistory);
+                HttpResponseMessage response = (HttpResponseMessage)null;
+                response = await httpClient.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiTask = response.Content.ReadAsStringAsync();
+                    var responseString = apiTask.Result;
+                    var model = JsonConvert.DeserializeObject<List<PaymentLogsVM>>(responseString);
+
+                    return View(model);
+
+                    //return Json(model);
+                }
+                return View();
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

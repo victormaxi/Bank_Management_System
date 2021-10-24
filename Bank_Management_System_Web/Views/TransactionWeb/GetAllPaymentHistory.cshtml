@@ -1,0 +1,93 @@
+﻿@using _Core.ViewModels;
+@model  IEnumerable<_Core.ViewModels.PaymentLogsVM>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name=" = viewport" content="width=device-width" />
+    <title>Payment Logs</title>
+</head>
+<body>
+    <h4>History</h4>
+    <hr />
+  @using(Html.BeginForm())
+  {
+      <p>
+          Find by Bill Name : @Html.TextBox("SearchString")
+          <input type="submit" value="Search" />
+      </p>
+  }
+    <table class="table table-bordered" cellpadding="5" cellspacing="5" widt h="100%">
+        <tr>
+            <th>
+            <a asp-action="GetAllPaymentHistory" asp-route-sortOrder="@ViewBag.NameSortParm" asp-route-pg="@(pager.CurrentPage)">Bill Name</a> </th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Reference Number</th>
+        </tr>
+       
+        @foreach(PaymentLogsVM paymenlogs in Model)
+            {
+                <tr>
+                    <td>@paymenlogs.BillName</td>
+                    <td>@paymenlogs.Amount</td>
+                    <td>@paymenlogs.Date</td>
+                    <td>@paymenlogs.ReferenceNumber</td>
+                </tr>
+            }
+    </table>
+
+    <div class="container">
+        @if(pager.TotalPages > 0)
+        {
+        <ul class="pagination justify-content-end">
+
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Transactionweb" asp-action="GetAllPaymentHistory" asp-route-pg="1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Transactionweb" asp-action="GetAllPaymentHistory" asp-route-pg="@(pager.CurrentPage -1)">Previous</a>
+                </li>
+            }
+
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item @(pge == pager.CurrentPage ?"active" : "")">
+                    <a class="page-link" asp-controller="TransactionWeb" asp-action="GetAllPaymentHistory" asp-route-pg="@pge">@pge</a>
+                </li>
+            }
+
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="TransactionWeb" asp-action="GetAllPaymentHistory" asp-route-pg="@(pager.CurrentPage + 1)">Next</a>
+                </li>
+                <li>
+                    <a class="page-link" asp-controller="TransactionWeb" asp-action="GetAllPaymentHistory" asp-route-pg="@(pager.TotalPages)">Last</a>
+                </li>
+            }
+        </ul>
+       
+        }
+    </div>
+    <br />
+    <br />
+
+    <form method="post" asp-controller="Transactionweb" asp-action="Export">
+        <input type="submit" value="Download" />
+    </form>
+</body>
+</html>

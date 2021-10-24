@@ -11,7 +11,7 @@
 }
 
 <div class="container">
-    <table class="table">
+    <table class="table table-bordered table-dark">
         <tr>
             <th> Username</th>
             <th>Profile Image</th>
@@ -24,6 +24,8 @@
             <td><a asp-controller="Account" asp-action="UpdateUserProfile" class="btn btn-success">Edit</a></td>
 
             <td><a asp-controller="TransactionWeb" asp-action="index" class="btn btn-success">Pay bill</a></td>
+
+            <td><a asp-controller="TransactionWeb" asp-action="GetAllPaymentHistory" class="btn btn-success">View Transaction History</a></td>
         </tr>
     
     </table>

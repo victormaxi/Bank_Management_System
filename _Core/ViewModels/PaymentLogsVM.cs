@@ -7,6 +7,7 @@ namespace _Core.ViewModels
     public class PaymentLogsVM
     {
 
+        public int BillId { get; set; }
         public string BillName { get; set; }
         public string Amount { get; set; }
         public DateTime Date { get; set; }
