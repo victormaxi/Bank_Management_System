@@ -22,7 +22,7 @@ namespace Bank_Management_System.Controllers
         }
 
         [Route("GetBills")]
-        public async Task<ActionResult<IEnumerable<Bill_Types>>> GetBills()
+        public async Task<ActionResult<IEnumerable<Transactions>>> GetBills()
         {
             try
             {

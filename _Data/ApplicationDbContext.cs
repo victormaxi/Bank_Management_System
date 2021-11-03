@@ -44,7 +44,7 @@ namespace _Data
                 .WithOne(b => b.ApplicationUser);
             //.HasForeignKey<Transactions>(c => c.UserId);
 
-            modelBuilder.Entity<Bill_Types>()
+            modelBuilder.Entity<Transactions>()
 
                 ;
         }

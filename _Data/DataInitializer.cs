@@ -30,7 +30,10 @@ namespace _Data
             #region Bill Types
             var bills = new Bill_Types[]
             {
-                new Bill_Types {Bill_Name = "GOTV", Amount = "#3500"}, new Bill_Types {Bill_Name = "DSTV", Amount = "#6000"}, new Bill_Types {Bill_Name = "EKECD", Amount = "#10000"}, new Bill_Types {Bill_Name = "AIR TIME", Amount = "#4000"}
+                new Bill_Types {Bill_Name = "GOTV", Amount = "#3500"}, 
+                new Bill_Types {Bill_Name = "DSTV", Amount = "#6000"}, 
+                new Bill_Types {Bill_Name = "EKECD", Amount = "#10000"}, 
+                new Bill_Types {Bill_Name = "AIR TIME", Amount = "#4000"}
             };
 
             dbContext.Bill_Types.AddRange(bills);

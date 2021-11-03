@@ -10,7 +10,7 @@ namespace Bank_Management_System_Web.Services.Interface
     {
         ApplicationUser GetUserDetails(string id);
 
-       Task< Bill_Types> GetBillDetailsAsync(int id);
+       Task<Bill_Types> GetBillDetailsAsync(int id);
         Task<IEnumerable<Bill_Types>> GetBills();
     }
 }

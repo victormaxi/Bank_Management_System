@@ -11,6 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("Bank_Management_System, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\Bank_Management_Sy" +
+    "stem", "Bank_Management_System.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("_Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Core", "_Core.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("_Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Data", "_Data.csproj", "0")]
+[assembly: Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryContentRootAttribute("_Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null", "C:\\Users\\Kelechi Onu\\Documents\\Projects\\Bank_Management_System\\_Domain", "_Domain.csproj", "0")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("UnitTesting")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

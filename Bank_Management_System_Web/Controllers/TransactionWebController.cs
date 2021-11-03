@@ -96,7 +96,7 @@ namespace Bank_Management_System_Web.Controllers
                 (selectBill);
         }
         [HttpPost]
-        public async Task<IActionResult>BillPayment(Bill_Types bill2)
+        public async Task<IActionResult>BillPayment(Transactions bill2)
         {
             try
             {

@@ -100,6 +100,7 @@ namespace Bank_Management_System
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IImageManager, ImageManager>();
             services.AddScoped<ITransaction, TransactionManager>();
+            services.AddScoped<ITransactionTest, TransactionTestManager>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddCors(o =>
             {
